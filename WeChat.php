@@ -8,11 +8,9 @@ namespace WeChat;
  */
 class WeChat
 {
-    
     public function __construct( $argument )
     {
         $config = config::all();
-        
-        print_r($config);
+        dump( $config );
     }
 }

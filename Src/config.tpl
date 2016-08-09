@@ -1,11 +1,12 @@
 <?php
 return array(
-    /* 数据库配置 */
-    'DB_TYPE'   => 'mysql', // 数据库类型
-    'DB_HOST'   => 'localhost', // 服务器地址
-    'DB_NAME'   => 'wt_peixunjigou', // 数据库名
-    'DB_USER'   => 'wttest',
-    'DB_PWD'    => 'CAvPhn3WdKZQ46sN',
-    'DB_PORT'   => '3306', // 端口
-    'DB_PREFIX' => '', // 数据库表前缀
+    // 默认微信配置
+    'defaule'=>array(
+        'type'      =>'公众号类型 qiye or fuwu or dingyue',
+        'appid'     => '微信公众平台中的appid',
+        'appsecret' => '微信公众平台中的secret',
+        'token'     => '微信服务器对接您的服务器验证token',
+        'agentid'   => '如果是企业化设置应用id',
+    ),
+    'cache_path'=>'./Runtime',// 缓存目录
 );

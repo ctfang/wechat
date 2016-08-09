@@ -7,9 +7,7 @@ namespace WeChat;
 class config
 {
 
-    static public $config_path ='./Application/Common/Conf/wechat.php';
-
-    static public $cache_path ='./Runtime';
+    static public $config_path ='';
 
     static protected $config ;
 
@@ -41,5 +39,13 @@ class config
     static public function all(){
         self::set();
         return self::$config;
+    }
+    static public function config_path(){
+        if( empty(self::$config_path) ){
+            $vendorDir  = dirname(dirname(dirname(__FILE__)));
+            $baseDir    = dirname($vendorDir);
+            self::$config_path = $baseDir.'/config/wechat.php';
+        }
+        return self::$config_path;
     }
 }

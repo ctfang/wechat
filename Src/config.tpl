@@ -1,7 +1,7 @@
 <?php
 return array(
     // 默认微信配置
-    'defaule'=>array(
+    'wechat'=>array(
         'type'      =>'公众号类型 qiye or fuwu or dingyue',
         'appid'     => '微信公众平台中的appid',
         'appsecret' => '微信公众平台中的secret',

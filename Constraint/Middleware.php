@@ -13,6 +13,8 @@ interface Middleware
 //    public $appsecret;
 //    public $token;
 //    public $agentid;
+//    public $encodingaeskey;
+//    static public $wxcpt;
     public function __construct(array $config);
     public function gettoken();
     public function __call($name, $arguments);

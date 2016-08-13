@@ -1,6 +1,6 @@
 <?php
 namespace WeChat\Src;
-use WeChat\config;
+use WeChat\Config;
 /**
  * Created by PhpStorm.
  * User: 007
@@ -16,14 +16,14 @@ class Cache
      */
     static public function set($name,$value,$expiration=0)
     {
-        $cache_file_path = config::cache_path();
+        $cache_file_path = Config::cache_path();
         if( !file_exists($cache_file_path) ) mkdir($cache_file_path, 0755, true);
         $data = ['data'=>$value,'expiration'=>$expiration+time()];
         $str  = serialize($data);
         file_put_contents($cache_file_path.'/'.$name,$str);
     }
     static public function get($name){
-        $file_path       = config::cache_path().'/'.$name;
+        $file_path       = Config::cache_path().'/'.$name;
         if( !file_exists($file_path) ) return false;
         $str    = file_get_contents($file_path);
         $data   = unserialize($str);
@@ -34,7 +34,7 @@ class Cache
         return $data['data'];
     }
     static public function delete($name){
-        $file_path       = config::cache_path().'/'.$name;
+        $file_path       = Config::cache_path().'/'.$name;
         if( !file_exists($file_path) ) return true;
         unlink($file_path);
     }

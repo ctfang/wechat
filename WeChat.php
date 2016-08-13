@@ -12,7 +12,7 @@ class WeChat
 
     static public function getConnect( $argument='wechat' )
     {
-        $config = config::{$argument}();
+        $config = Config::{$argument}();
 
         switch ($config['type']) {
             case 'qiye':

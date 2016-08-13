@@ -15,6 +15,8 @@ class Connect implements Middleware
     public $appsecret;
     public $token;
     public $agentid;
+    public $encodingaeskey;
+    static public $wxcpt;
 
     /**
      * 设置基本变量
@@ -36,7 +38,7 @@ class Connect implements Middleware
     public function __call($name, $arguments){
         $class = 'WeChat\\Qiye\\'.ucfirst(strtolower($name));
         if( class_exists( $class ) ){
-            return new $class( $arguments );
+            return new $class( $this );
         }else{
             die('找不到类'.$class);
         }
@@ -63,5 +65,59 @@ class Connect implements Middleware
         }
         Cache::set($cacheName,$arrTemp['access_token'],$arrTemp['expires_in']-100);
         return $arrTemp['access_token'];
+    }
+    // 获取微信库对象
+    public function wxcpt(){
+        if( isset(self::$wxcpt) ){
+            return self::$wxcpt;
+        }
+        // 引入微信库
+        require_once dirname(__DIR__).'/Src/qiye/WXBizMsgCrypt.php';
+        // 引入微信库
+        self::$wxcpt = new \WXBizMsgCrypt($this->token, $this->encodingaeskey, $this->appid);
+        return self::$wxcpt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getData() {
+        $this->wxcpt 	= $this->wxcpt();
+        // 获取参数
+        $input['msg_signature']		=	$_GET['msg_signature'];
+        $input['timestamp']		    =	$_GET['timestamp'];
+        $input['nonce']		        =	$_GET['nonce'];
+        if( $echostr = $_GET['echostr'] ){
+            $errCode 		= $this->wxcpt->VerifyURL($input['msg_signature'], $input['timestamp'], $input['nonce'], $echostr, $sMsg);
+            if ($errCode == 0) {
+                // 验证URL成功，将sEchoStr返回
+                echo $sMsg;		exit(0);
+            } else {
+                print_r($input);
+                die('error');
+            }
+        }
+        $input['msg_encrypt'] 		=   $GLOBALS["HTTP_RAW_POST_DATA"];
+        // 实例化
+        $this->wxcpt 	= $this->wxcpt();
+        $sMsg 			= "";  // 解析之后的明文
+        $errCode 		= $this->wxcpt->DecryptMsg($input['msg_signature'], $input['timestamp'], $input['nonce'], $input['msg_encrypt'], $sMsg);
+        if ($errCode == 0) {
+            // 解密成功，sMsg即为xml格式的明文
+            $content = $sMsg;
+        }else{
+            die("ERR: " . $errCode . "\n\n");
+        }
+        $data = new \SimpleXMLElement ( $content );
+
+        foreach ( $data as $key => $value ) {
+            foreach($value as $k => $vo){
+                $this->data [$key][$k] = strval ( $vo );
+            }
+            if(!is_array($this->data [$key])){
+                $this->data [$key] = strval ( $value );
+            }
+        }
+        return $this->data;
     }
 }

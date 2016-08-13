@@ -4,7 +4,7 @@ namespace WeChat;
 /**
  * 获取tp or myself 配置类
  */
-class config
+class Config
 {
 
     static public $config_path ='';
@@ -21,13 +21,13 @@ class config
     }
 
     static public function set($name='',$value=''){
-        if ( !isset(self::$config) && config::config_path() && !isset(self::$$name) ){
-            if( !is_file(config::config_path()) ){
-                mkdir(dirname(config::config_path()), 0755, true);
+        if ( !isset(self::$config) && Config::config_path() && !isset(self::$$name) ){
+            if( !is_file(Config::config_path()) ){
+                mkdir(dirname(Config::config_path()), 0755, true);
                 $config_str = file_get_contents(__DIR__.'/Src/config.tpl');
-                file_put_contents(config::config_path(),$config_str);
+                file_put_contents(Config::config_path(),$config_str);
             }
-            self::$config = include config::config_path();
+            self::$config = include Config::config_path();
         }
         if( isset(self::$$name) && $value!='' ){
             self::$$name  = $value;
